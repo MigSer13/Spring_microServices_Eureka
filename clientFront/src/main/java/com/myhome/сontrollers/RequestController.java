@@ -1,5 +1,6 @@
 package com.myhome.сontrollers;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -20,10 +21,14 @@ public class RequestController {
         return new RestTemplate();
     }
 
+    @HystrixCommand(fallbackMethod = "productsFallback")
     @GetMapping("/products")
     public String getProducts(){
         String result = restTemplate.getForObject("http://eureka-client-DB/api/v1/products", String.class);
         return result;
     }
 
+    public String productsFallback(){
+        return "answer empty";
+    }
 }
