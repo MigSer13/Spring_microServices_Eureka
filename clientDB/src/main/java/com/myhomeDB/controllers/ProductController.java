@@ -1,14 +1,18 @@
 package com.myhomeDB.controllers;
 
 import com.myhomeDB.dto.ProductDto;
+import com.myhomeDB.exeptions.ResourceNotFoundException;
 import com.myhomeDB.models.Product;
 import com.myhomeDB.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,20 +27,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductDto> findAll(
-            @RequestParam(name = "p", defaultValue = "1") int pageIndex,
-            @RequestParam(name = "min_price", required = false) BigDecimal minPrice,
-            @RequestParam(name = "max_price", required = false) BigDecimal maxPrice,
-            @RequestParam(name = "title", required = false) String title
+    public List<ProductDto> findAll(
     ) {
-        HashMap<String, Object> specificationList = new HashMap<>();
-        specificationList.put("min_price", minPrice);
-        specificationList.put("max_price", maxPrice);
-        specificationList.put("title", title);
-        SpecificationFilterOfProductController specFilter = new SpecificationFilterOfProductController(specificationList);
-        Specification<Product> spec = specFilter.getSpecification();
-
-        return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
+        //return productService.findPage(pageIndex - 1, 5).map(ProductDto::new);
+        return productService.findAll().stream().map(product -> new ProductDto(product)).collect(Collectors.toList());
     }
 
 

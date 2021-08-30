@@ -1,6 +1,8 @@
 package com.myhomeDB.dto;
 
 import com.myhomeDB.models.Product;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -15,7 +17,7 @@ public class ProductDto {
     public ProductDto(Product product) {
         this.id = product.getId();
         this.title = product.getTitle();
-        this.categoryTitle = product.getCategory().getTitle();
+        //this.categoryTitle = product.getCategory().getTitle();
         this.price = product.getPrice();
     }
 }
